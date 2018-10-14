@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<div class="page1">
+  <h1 class="mdl-typography--display-2">テストデータ（先頭１０件）</h1>
+    {{ test_table|safe }}
+    </br>
+</div>
+
+
+<form action="{{ url_for('index') }}"  method="post">
+  <p>都道府県</p>
+  <select name="state">
+
+ {% for state in states %}
+   <option value={{ state }}>{{state|safe}}</option>
+
+ {% endfor %}
+  </select>
+  
+  <br>
+   <button type="submit">クエリ実行</button>
+   </form>
+
+
+<script>
+$(document).ready(function(){
+$('.dataframe').dataTable(
+{
+iDisplayLength : -1
+}
+);
+});
+ </script>
+
+    {% include "map.html" %}
+  
+
+
+{% endblock %}
+
+
+
+<!--
+ <form action="{{ url_for('stack_tables') }}"  method="post">
+ アクション：
+<input type="checkbox" name="stack" value="on" /> on　
+ <input type="submit" value="実行ボタン">
+ </form>
+  -->
