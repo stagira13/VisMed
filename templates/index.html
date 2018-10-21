@@ -1,15 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<h1>タイトル</h1>
 
-<div class="page1">
-  <h1 class="mdl-typography--display-2">テストデータ（先頭１０件）</h1>
-    {{ test_table|safe }}
-    </br>
-</div>
+<div id="mapid"></div>
 
-
-<form action="{{ url_for('index') }}"  method="post">
+<form action=""  method="post" id="states_form">
   <p>都道府県</p>
   <select name="state">
 
@@ -20,7 +16,30 @@
   </select>
   
   <br>
-   <button type="submit">クエリ実行</button>
+   <input type="submit">クエリ実行</input>
+   </form>
+
+
+
+<div class="page1">
+  <h1>テストデータ（先頭１０件）</h1>
+    {{ test_table|safe }}
+    </br>
+</div>
+
+
+<form action="{{ url_for('index') }}"  method="post" id="post_test">
+  <p>都道府県</p>
+  <select name="state">
+
+ {% for state in states %}
+   <option value={{ state }}>{{state|safe}}</option>
+
+ {% endfor %}
+  </select>
+  
+  <br>
+   <input type="submit">クエリ実行</input>
    </form>
 
 
@@ -32,11 +51,12 @@ iDisplayLength : -1
 }
 );
 });
- </script>
+</script>
+<script type="text/javascript" charset="utf8" src = "{{ url_for('static', filename='index.js') }}">
+</script>
 
-    {% include "map.html" %}
+
   
-
 
 {% endblock %}
 
@@ -49,3 +69,4 @@ iDisplayLength : -1
  <input type="submit" value="実行ボタン">
  </form>
   -->
+
