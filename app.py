@@ -7,6 +7,24 @@ import glob
 import os
 from sqlalchemy import create_engine
 import folium
+from geojson import Point, Feature, FeatureCollection
+import geojson
+
+def create_feature(geo_dict,prop_key):
+    lat = geo_dict['Y']
+    lon = geo_dict['X']
+    point_elm = Point((lon,lat))
+    prop=geo_dict[prop_key]
+    feature_elm = Feature(geometry=point_elm,properties=prop)
+    return feature_elm
+    
+def create_feature_collection(geo_dicts,prop_key):
+    data = []
+    for geo_dict in geo_dicts:
+        data.append(create_feature(geo_dict,prop_key))
+    f_collect = FeatureCollection(data)
+    return f_collect
+    
 
 app = Flask(__name__)
 
@@ -32,8 +50,9 @@ def return_json():
     state_name = request.args.get('states')
     query = f"select * from hosp Where 都道府県 = '{state_name}' LIMIT 10"
     df = pd.read_sql(query,engine)
-    json_data = df.to_json(orient='records')
-    return json_data
+    geo_dicts = df.to_dict(orient='records')
+    geo_json_data = create_feature_collection(geo_dicts,'医療機関名')
+    return geojson.dumps(geo_json_data)
 
 @app.route("/",methods = ['POST'])
 def map():
